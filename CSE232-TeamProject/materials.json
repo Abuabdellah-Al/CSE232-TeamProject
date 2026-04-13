@@ -1,0 +1,58 @@
+{
+    "materials": [
+        {
+            "density": 7.3,
+            "id": 1,
+            "name": "Cast iron",
+            "sigma_yield": 130
+        },
+        {
+            "density": 8.94,
+            "id": 2,
+            "name": "Copper nickel",
+            "sigma_yield": 130
+        },
+        {
+            "density": 8.73,
+            "id": 3,
+            "name": "Brass",
+            "sigma_yield": 200
+        },
+        {
+            "density": 2.7,
+            "id": 4,
+            "name": "Aluminum",
+            "sigma_yield": 241
+        },
+        {
+            "density": 7.58,
+            "id": 5,
+            "name": "Steel",
+            "sigma_yield": 247
+        },
+        {
+            "density": 1.16,
+            "id": 6,
+            "name": "Acrylic",
+            "sigma_yield": 72
+        },
+        {
+            "density": 8.92,
+            "id": 7,
+            "name": "Copper",
+            "sigma_yield": 70
+        },
+        {
+            "density": 7.86,
+            "id": 8,
+            "name": "Stainless steel",
+            "sigma_yield": 275
+        },
+        {
+            "density": 19.25,
+            "id": 9,
+            "name": "Tungsten",
+            "sigma_yield": 941
+        }
+    ]
+}

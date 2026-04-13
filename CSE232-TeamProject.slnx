@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="CSE232-TeamProject/CSE232-TeamProject.vcxproj" />
+  <Project Path="CSE232-TeamProject/CSE232-TeamProject.vcxproj" Id="6f13fa98-448f-45f1-93a5-156796dd4de4" />
 </Solution>
