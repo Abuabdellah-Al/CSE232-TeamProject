@@ -1,8 +1,9 @@
 // CSE232-TeamProject.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include <iostream>
 #include <fstream>
-#define _USE_MATH_DEFINES
 #include "json.hpp"
 using json = nlohmann::json;
 using namespace std;
@@ -73,6 +74,37 @@ void CreateTable() {
 			<< "| " << setw(yieldWidth) << yield
 			<< "| " << setw(densityWidth) << density << endl;
 	}
+}
+
+double LinkMass(double density, double L, double b, double h, double r, bool is_Circular)
+{
+	if (is_Circular)
+	{return density * (M_PI * pow(r, 2) * L);}
+	else
+	{return density * (b * h * L);}
+}
+
+double BendingMoment(double ml, double mp, double L, double alphaMax)
+{
+	double g = 9.81; 
+	double M = (ml * g * (L / 2.0)) + (mp * g * L) + (ml * pow((L / 2.0), 2) * alphaMax) + (mp * pow(L, 2) * alphaMax);
+	return M;
+}
+
+double MomentofInertia(double b, double h, double r, bool is_Circular)
+{
+	if (is_Circular)
+	{return (M_PI * pow(r, 4)) / 4.0;}
+	else 
+	{return (b * pow(h, 3)) / 12.0;}
+}
+
+double MaxStress(double M, double h, double r, double I, bool is_Circular) 
+{
+	if (is_Circular)
+	{return (M * r) / I;}
+	else
+	{return (M * (h / 2.0)) / I;}
 }
 
 int main()
@@ -147,6 +179,28 @@ int main()
 	}
 
 	cout << "\nYou have selected material: " << materials_json["materials"][material_id - 1]["name"] << endl;
+	
+	
+	double b=0, h=0, r=0, L, mp, alphaMax ;
+	cout << "Enter link length, Payload mass and Max angular acceleration respectively" << endl;
+	cin >> L>> mp>> alphaMax;
+	
+	if (is_Circular)
+	{
+		cout << "Enter initial radius" << endl;
+		cin  >> r;
+	}
+	else
+	{
+		cout << "Enter initial width(b) & hight(h)" << endl;
+		cin  >> b >> h;
+	}
+
+	////starting optimization
+	double ml, M, I, CurrentStress;
+	bool is_optimized = false;
+	
+	
 	return 0;
 }
 
