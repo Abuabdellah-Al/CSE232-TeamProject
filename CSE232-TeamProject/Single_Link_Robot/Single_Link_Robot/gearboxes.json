@@ -1,0 +1,112 @@
+{
+  "gearboxes": [
+    {
+      "id": 1,
+      "name": "GP 22 A",
+      "manufacturer": "maxon",
+      "gear_ratio": 50,
+      "stages": 2,
+      "max_torque": 1.5,
+      "efficiency": 80,
+      "diameter": 22,
+      "length": 40,
+      "weight": 0.12
+    },
+    {
+      "id": 2,
+      "name": "GP 26 A",
+      "manufacturer": "maxon",
+      "gear_ratio": 66,
+      "stages": 2,
+      "max_torque": 2.5,
+      "efficiency": 82,
+      "diameter": 26,
+      "length": 45,
+      "weight": 0.15
+    },
+    {
+      "id": 3,
+      "name": "GP 32 A",
+      "manufacturer": "maxon",
+      "gear_ratio": 84,
+      "stages": 3,
+      "max_torque": 4,
+      "efficiency": 83,
+      "diameter": 32,
+      "length": 60,
+      "weight": 0.25
+    },
+    {
+      "id": 4,
+      "name": "GP 42 C",
+      "manufacturer": "maxon",
+      "gear_ratio": 100,
+      "stages": 3,
+      "max_torque": 5,
+      "efficiency": 81,
+      "diameter": 42,
+      "length": 74,
+      "weight": 0.35
+    },
+    {
+      "id": 5,
+      "name": "GP 52 C",
+      "manufacturer": "maxon",
+      "gear_ratio": 120,
+      "stages": 3,
+      "max_torque": 10,
+      "efficiency": 80,
+      "diameter": 52,
+      "length": 85,
+      "weight": 0.6
+    },
+    {
+      "id": 6,
+      "name": "GP 62 C",
+      "manufacturer": "maxon",
+      "gear_ratio": 150,
+      "stages": 4,
+      "max_torque": 20,
+      "efficiency": 78,
+      "diameter": 62,
+      "length": 100,
+      "weight": 1.1
+    },
+    {
+      "id": 7,
+      "name": "GPX 22",
+      "manufacturer": "maxon",
+      "gear_ratio": 30,
+      "stages": 2,
+      "max_torque": 1.2,
+      "efficiency": 85,
+      "diameter": 22,
+      "length": 35,
+      "weight": 0.1
+    },
+    {
+      "id": 8,
+      "name": "GPX 32",
+      "manufacturer": "maxon",
+      "gear_ratio": 70,
+      "stages": 3,
+      "max_torque": 3.5,
+      "efficiency": 86,
+      "diameter": 32,
+      "length": 55,
+      "weight": 0.2
+    },
+    {
+      "id": 9,
+      "name": "GPX 42",
+      "manufacturer": "maxon",
+      "gear_ratio": 90,
+      "stages": 3,
+      "max_torque": 6,
+      "efficiency": 85,
+      "diameter": 42,
+      "length": 70,
+      "weight": 0.3
+    }
+  ]
+}

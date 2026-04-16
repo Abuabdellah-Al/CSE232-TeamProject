@@ -1,0 +1,121 @@
+{
+  "motors": [
+    {
+      "id": 1,
+      "name": "EC-i 30",
+      "manufacturer": "maxon",
+      "nominal_voltage": 24,
+      "no_load_speed": 9000,
+      "nominal_torque": 0.02,
+      "stall_torque": 0.08,
+      "efficiency": 88,
+      "diameter": 30,
+      "length": 50,
+      "weight": 0.25
+    },
+    {
+      "id": 2,
+      "name": "EC-i 40",
+      "manufacturer": "maxon",
+      "nominal_voltage": 24,
+      "no_load_speed": 7580,
+      "nominal_torque": 0.051,
+      "stall_torque": 0.234,
+      "efficiency": 89,
+      "diameter": 40,
+      "length": 59,
+      "weight": 0.48
+    },
+    {
+      "id": 3,
+      "name": "EC-i 52",
+      "manufacturer": "maxon",
+      "nominal_voltage": 24,
+      "no_load_speed": 6000,
+      "nominal_torque": 0.12,
+      "stall_torque": 0.5,
+      "efficiency": 90,
+      "diameter": 52,
+      "length": 70,
+      "weight": 0.8
+    },
+    {
+      "id": 4,
+      "name": "RE 25",
+      "manufacturer": "maxon",
+      "nominal_voltage": 12,
+      "no_load_speed": 10000,
+      "nominal_torque": 0.015,
+      "stall_torque": 0.06,
+      "efficiency": 85,
+      "diameter": 25,
+      "length": 45,
+      "weight": 0.13
+    },
+    {
+      "id": 5,
+      "name": "RE 35",
+      "manufacturer": "maxon",
+      "nominal_voltage": 24,
+      "no_load_speed": 8000,
+      "nominal_torque": 0.04,
+      "stall_torque": 0.18,
+      "efficiency": 87,
+      "diameter": 35,
+      "length": 57,
+      "weight": 0.34
+    },
+    {
+      "id": 6,
+      "name": "RE 40",
+      "manufacturer": "maxon",
+      "nominal_voltage": 24,
+      "no_load_speed": 7500,
+      "nominal_torque": 0.06,
+      "stall_torque": 0.25,
+      "efficiency": 88,
+      "diameter": 40,
+      "length": 60,
+      "weight": 0.5
+    },
+    {
+      "id": 7,
+      "name": "EC-max 30",
+      "manufacturer": "maxon",
+      "nominal_voltage": 24,
+      "no_load_speed": 11000,
+      "nominal_torque": 0.025,
+      "stall_torque": 0.09,
+      "efficiency": 86,
+      "diameter": 30,
+      "length": 55,
+      "weight": 0.22
+    },
+    {
+      "id": 8,
+      "name": "EC-max 40",
+      "manufacturer": "maxon",
+      "nominal_voltage": 24,
+      "no_load_speed": 9000,
+      "nominal_torque": 0.07,
+      "stall_torque": 0.3,
+      "efficiency": 89,
+      "diameter": 40,
+      "length": 68,
+      "weight": 0.6
+    },
+    {
+      "id": 9,
+      "name": "EC-flat 45",
+      "manufacturer": "maxon",
+      "nominal_voltage": 24,
+      "no_load_speed": 5000,
+      "nominal_torque": 0.1,
+      "stall_torque": 0.4,
+      "efficiency": 90,
+      "diameter": 45,
+      "length": 25,
+      "weight": 0.4
+    }
+  ]
+}

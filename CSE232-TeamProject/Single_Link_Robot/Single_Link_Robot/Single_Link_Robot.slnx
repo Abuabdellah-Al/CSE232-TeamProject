@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Single_Link_Robot.vcxproj" Id="30d0c6ba-36bd-4c34-ac24-e8858e87af49" />
+</Solution>
