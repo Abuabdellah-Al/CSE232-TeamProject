@@ -196,11 +196,44 @@ int main()
 		cin  >> b >> h;
 	}
 
+
+	double sigma_yield = static_cast<double>(materials_json["materials"][material_id - 1]["sigma_yield"]) * 1000000.0;
+	double density     = static_cast<double>(materials_json["materials"][material_id - 1]["density"]) * 1000.0;
+	
 	////starting optimization
 	double ml, M, I, CurrentStress;
-	bool is_optimized = false;
+	bool   is_optimized = false;
+
+	while (!is_optimized)
+	{
+		ml = LinkMass (density, L, b, h, r, is_Circular);
+		M  = BendingMoment (ml, mp, L, alphaMax);
+		I  = MomentofInertia (b, h, r, is_Circular);
+	    CurrentStress = MaxStress(M, h, r, I, is_Circular);
+
+		
+		if (CurrentStress > sigma_yield) 
+		{
+			if (is_Circular) { r *= 1.01; }
+			else { b *= 1.01; h *= 1.01; }
+		}
+		else if (CurrentStress < (sigma_yield * 0.99)) 
+		{
+			if (is_Circular) { r *= 0.99; }
+			else { b *= 0.99; h *= 0.99; }
+		}
+		else {is_optimized = true;}
+	}
 	
-	
+	cout << " OPTIMIZATION RESULTS: " << endl;
+
+	if (is_Circular) 
+	{cout << "Safe Radius (r): " << r << "m" << " = " << r*100 << "cm" << endl; }
+	else 
+	{cout << "Safe Width(b) & Height(h): " << b << "m & " << h << "m" << "or" << b*100 << "cm & " << h*100 << "cm" << endl; }
+
+	cout << "Final Link Mass:  " << ml << " kg" << endl;
+	cout << "Final Max Stress: " << CurrentStress / 1000000.0 << " MPa" << endl;
+
 	return 0;
 }
-
