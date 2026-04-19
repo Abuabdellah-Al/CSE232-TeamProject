@@ -26,5 +26,9 @@
     <None Include="materials.json">
       <Filter>Databases</Filter>
     </None>
+    <None Include="motors.json">
+      <Filter>Databases</Filter>
+    </None>
+    <None Include="gearboxes.json" />
   </ItemGroup>
 </Project>

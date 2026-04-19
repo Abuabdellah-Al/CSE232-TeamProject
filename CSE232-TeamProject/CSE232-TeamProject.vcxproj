@@ -131,7 +131,9 @@
     <ClCompile Include="CSE232-TeamProject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="gearboxes.json" />
     <None Include="materials.json" />
+    <None Include="motors.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
