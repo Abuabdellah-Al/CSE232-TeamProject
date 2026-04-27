@@ -77,12 +77,12 @@ double RequiredTorque(double ml, double mp, double L, double amax)
 
 double OutputTorque(double Tmotor, double ratio, double eff)
 {
-    return Tmotor * ratio * (eff / 100.0);  // efficiency is stored as percentage (80-90)
+    return Tmotor * ratio * (eff / 100.0);
 }
 
 double OutputSpeed(double motor_rpm, double ratio)
 {
-    double omega_motor = motor_rpm * (2 * M_PI / 60.0); // rpm → rad/s
+    double omega_motor = motor_rpm * (2 * M_PI / 60.0);
     return omega_motor / ratio;
 }
 
@@ -112,6 +112,11 @@ int main()
     cout << "Enter required output speed (rad/s): ";
     cin >> omega_required;
 
+    //max cost from user
+    double max_cost;
+    cout << "Enter maximum allowed cost: ";
+    cin >> max_cost;
+
     // -----------------------------
     // REQUIRED TORQUE
     // -----------------------------
@@ -123,28 +128,31 @@ int main()
     // OPTIMIZATION LOOP
     // -----------------------------
     double best_cost = 1e9;
+    double best_mass = 1e9;
     json best_choice;
 
     for (const auto& m : motors_json["motors"])
     {
         for (const auto& g : gearboxes_json["gearboxes"])
         {
-            // Use correct field names from JSON files
             double T_out = OutputTorque(m["nominal_torque"], g["gear_ratio"], g["efficiency"]);
             double omega_out = OutputSpeed(m["no_load_speed"], g["gear_ratio"]);
 
             if (T_out >= T_required && omega_out >= omega_required)
             {
-                // Use 'weight' for mass and 'length' for width
                 double mass = m["weight"].get<double>() + g["weight"].get<double>();
                 double diameter = m["diameter"].get<double>() + g["diameter"].get<double>();
                 double width = m["length"].get<double>() + g["length"].get<double>();
 
                 double cost = mass + diameter / 100.0 + width / 100.0;
 
-                if (cost < best_cost)
+                //cost constraint + best selection
+                if (cost <= max_cost &&
+                    (cost < best_cost || (abs(cost - best_cost) < 1e-6 && mass < best_mass)))
                 {
                     best_cost = cost;
+                    best_mass = mass;
+
                     best_choice = {
                         {"motor_id", m["id"]},
                         {"gearbox_id", g["id"]},
@@ -171,7 +179,7 @@ int main()
     }
     else
     {
-        cout << "\nNo valid combination found.\n";
+        cout << "\nNo valid combination found under the given cost.\n";
     }
 
     return 0;
