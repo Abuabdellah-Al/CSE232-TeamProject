@@ -51,14 +51,13 @@ class Motor {
 private:
 	int id;
 	string name, manufacturer;
-	double torque, speed, power, voltage, no_load_speed, nominal_torque, nominal_voltage, stall_torque, efficiency, diameter, length, weight;
+	double no_load_speed, nominal_torque, nominal_voltage, stall_torque, efficiency, diameter, length, weight;
 public:
 	//default constr
 	Motor() {
 		id = 0;
 		name = "";
 		manufacturer = "";
-		voltage = 0.0;
 		nominal_voltage = 0.0;
 		no_load_speed = 0.0;
 		nominal_torque = 0.0;
@@ -67,9 +66,6 @@ public:
 		diameter = 0.0;
 		length = 0.0;
 		weight = 0.0;
-		torque = 0.0;
-		speed = 0.0;
-		power = 0.0;
 	}
 	//constr
 	Motor(int motor_id)
@@ -78,7 +74,6 @@ public:
 		name = motors_json["motors"][motor_id - 1]["name"];
 		manufacturer = motors_json["motors"][motor_id - 1]["manufacturer"];
 		nominal_voltage = motors_json["motors"][motor_id - 1]["nominal_voltage"];
-		voltage = motors_json["motors"][motor_id - 1]["voltage"];
 		no_load_speed = motors_json["motors"][motor_id - 1]["no_load_speed"];
 		nominal_torque = motors_json["motors"][motor_id - 1]["nominal_torque"];
 		stall_torque = motors_json["motors"][motor_id - 1]["stall_torque"];
@@ -86,9 +81,6 @@ public:
 		diameter = motors_json["motors"][motor_id - 1]["diameter"];
 		length = motors_json["motors"][motor_id - 1]["length"];
 		weight = motors_json["motors"][motor_id - 1]["weight"];
-		torque = motors_json["motors"][motor_id - 1]["torque"];
-		speed = motors_json["motors"][motor_id - 1]["speed"];
-		power = motors_json["motors"][motor_id - 1]["power"];
 	}
 	//getters
 	int getid() const { return id; }
@@ -210,8 +202,8 @@ public:
 	double getCost() const { return cost; }
 	//setters
 	void setMaterial(Material mat) { material = mat; }
-	void setMotor(Motor mot) { motor = mot; }
-	void setGearbox(Gearbox gb) { gearbox = gb; }
+	void setMotor(int mot_id) { motor = Motor(mot_id); }
+	void setGearbox(int gb_id) { gearbox = Gearbox(gb_id); }
 	void setB(double width) { b = width; }
 	void setH(double height) { h = height; }
 	void setR(double radius) { r = radius; }
@@ -323,7 +315,7 @@ void displayGearboxesTable()
 
 void createTableHeaders(vector<int> column_widths, vector<string> column_names) {
 	int total_width = 0;
-
+	cout << " ";
 	for (int n : column_widths)
 		total_width +=n;
 	total_width += (column_widths.size() - 1) * 2 + 1; // account for "| " between columns and initial space
@@ -652,22 +644,32 @@ int main()
 	//cout << "Final Link Mass:  " << m_link << " kg" << "\n \n";
 	//cout << "Final Max Stress: " << current_stress / 1000000.0 << " MPa" << "\n \n";
 	this_thread::sleep_for(3s);
+	cout << "\n\n ##################################################################################################-" << "\n \n";
 
-	cout << "\n=========== MOTOR-GEARBOX OPTIMIZATION ===========\n";
+	cout << "\n ============================================MOTORS=============================================-" << "\n \n";
+
 
 	// Load JSON files
 	readjson(motors_json, "motors.json");
 	readjson(gearboxes_json, "gearboxes.json");
 
 	// Display tables
-	displayMotorsTable();
-	displayGearboxesTable();
-
+	//----------------------------------
+	//Motors Table
+	//---------------------------------
+	createTableHeaders({ 4,15,15,10,10,10,10 }, { "ID", "Motor Name", "NOL Speed(rpm)", "Nom.T (Nm)","Stall T","Efficen.","Dia."});
+	fillTable({ 4,15,15,10,10,10,10 }, motors_json, "motors", { "id","name","no_load_speed","nominal_torque","stall_torque","efficiency","diameter" });
+	//----------------------------------
+	//Gearboxes Table
+	//---------------------------------
+	cout << "\n \n ============================================GEARBOXES=============================================-" << "\n \n";
+	createTableHeaders({ 4,15,10,10,10,10}, { "ID", "GPX Name", "Gear %", "Max.T (Nm)","Efficen.","Dia." });
+	fillTable({ 4,15,10,10,10,10}, gearboxes_json, "gearboxes", { "id","name","gear_ratio","max_torque","efficiency","diameter" });
 	// -----------------------------
 	// USER INPUT
 	// -----------------------------
 	double omega_required;
-	cout << "Enter required output speed (rad/s): ";
+	cout << "\n Enter required output speed (rad/s): ";
 	omega_required = getValidateInput();
 
 	// -----------------------------
@@ -714,8 +716,8 @@ int main()
 			}
 		}
 	}
-	robot_link.setMotor(Motor(best_choice["motor_id"]));
-	robot_link.setGearbox(Gearbox(best_choice["gearbox_id"]));
+	robot_link.setMotor((int)best_choice["motor_id"]);
+	robot_link.setGearbox((int)best_choice["gearbox_id"]);
 	robot_link.setTorqueOut(best_choice["T_out"]);
 	robot_link.setOmega(best_choice["omega_out"]);
 	robot_link.setCost(best_choice["cost"]);
