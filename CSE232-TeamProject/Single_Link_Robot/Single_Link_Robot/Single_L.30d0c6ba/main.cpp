@@ -1,4 +1,4 @@
-//main of part 2                                                                                                                     
+//main of part 2                                                                 
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <iostream>
@@ -112,9 +112,9 @@ int main()
     cout << "Enter required output speed (rad/s): ";
     cin >> omega_required;
 
-    //max cost from user
+    // User choice: minimize cost or weight
     double costORweight;
-    cout << "for minimum cost:0 for minimum weight:1\n ";
+    cout << "Enter 0 to minimize cost, 1 to minimize weight: ";
     cin >> costORweight;
 
     // -----------------------------
@@ -146,20 +146,40 @@ int main()
 
                 double cost = mass + diameter / 100.0 + width / 100.0;
 
-                //cost constraint + best selection
-                if (cost <= max_cost &&
-                    (cost < best_cost || (abs(cost - best_cost) < 1e-6 && mass < best_mass)))
-                {
-                    best_cost = cost;
-                    best_mass = mass;
+                // Optimization based on user choice
+                if (costORweight == 0) {
+                    // Minimize cost
+                    if (cost < best_cost || (abs(cost - best_cost) < 1e-6 && mass < best_mass))
+                    {
+                        best_cost = cost;
+                        best_mass = mass;
 
-                    best_choice = {
-                        {"motor_id", m["id"]},
-                        {"gearbox_id", g["id"]},
-                        {"T_out", T_out},
-                        {"omega_out", omega_out},
-                        {"cost", cost}
-                    };
+                        best_choice = {
+                            {"motor_id", m["id"]},
+                            {"gearbox_id", g["id"]},
+                            {"T_out", T_out},
+                            {"omega_out", omega_out},
+                            {"cost", cost},
+                            {"mass", mass}
+                        };
+                    }
+                }
+                else if (costORweight == 1) {
+                    // Minimize weight
+                    if (mass < best_mass || (abs(mass - best_mass) < 1e-6 && cost < best_cost))
+                    {
+                        best_mass = mass;
+                        best_cost = cost;
+
+                        best_choice = {
+                            {"motor_id", m["id"]},
+                            {"gearbox_id", g["id"]},
+                            {"T_out", T_out},
+                            {"omega_out", omega_out},
+                            {"cost", cost},
+                            {"mass", mass}
+                        };
+                    }
                 }
             }
         }
@@ -175,11 +195,19 @@ int main()
         cout << "Gearbox ID: " << best_choice["gearbox_id"] << endl;
         cout << "Output Torque: " << best_choice["T_out"] << " Nm\n";
         cout << "Output Speed: " << best_choice["omega_out"] << " rad/s\n";
-        cout << "Cost: " << best_choice["cost"] << endl;
+        
+        if (costORweight == 0) {
+            cout << "Cost: " << best_choice["cost"] << " (minimized)\n";
+            cout << "Mass: " << best_choice["mass"] << " kg\n";
+        }
+        else {
+            cout << "Mass: " << best_choice["mass"] << " kg (minimized)\n";
+            cout << "Cost: " << best_choice["cost"] << endl;
+        }
     }
     else
     {
-        cout << "\nNo valid combination found under the given cost.\n";
+        cout << "\nNo valid combination found.\n";
     }
 
     return 0;
