@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <vector>
 #include "json.hpp"
 
 using json = nlohmann::json;
@@ -123,13 +124,12 @@ int main()
     double T_required = RequiredTorque(ml, mp, L, amax);
 
     cout << "\nRequired Torque = " << T_required << " Nm\n";
+    cout << "Required Speed = " << omega_required << " rad/s\n";
 
     // -----------------------------
-    // OPTIMIZATION LOOP
+    // FIND ALL VALID COMBINATIONS
     // -----------------------------
-    double best_cost = 1e9;
-    double best_mass = 1e9;
-    json best_choice;
+    vector<json> valid_combinations;
 
     for (const auto& m : motors_json["motors"])
     {
@@ -143,44 +143,92 @@ int main()
                 double mass = m["weight"].get<double>() + g["weight"].get<double>();
                 double diameter = m["diameter"].get<double>() + g["diameter"].get<double>();
                 double width = m["length"].get<double>() + g["length"].get<double>();
-
                 double cost = mass + diameter / 100.0 + width / 100.0;
 
-                // Optimization based on user choice
-                if (costORweight == 0) {
-                    // Minimize cost
-                    if (cost < best_cost || (abs(cost - best_cost) < 1e-6 && mass < best_mass))
-                    {
-                        best_cost = cost;
-                        best_mass = mass;
+                valid_combinations.push_back({
+                    {"motor_id", m["id"]},
+                    {"gearbox_id", g["id"]},
+                    {"T_out", T_out},
+                    {"omega_out", omega_out},
+                    {"mass", mass},
+                    {"cost", cost},
+                    {"motor_torque", m["nominal_torque"]},
+                    {"gear_ratio", g["gear_ratio"]}
+                    });
+            }
+        }
+    }
 
-                        best_choice = {
-                            {"motor_id", m["id"]},
-                            {"gearbox_id", g["id"]},
-                            {"T_out", T_out},
-                            {"omega_out", omega_out},
-                            {"cost", cost},
-                            {"mass", mass}
-                        };
-                    }
-                }
-                else if (costORweight == 1) {
-                    // Minimize weight
-                    if (mass < best_mass || (abs(mass - best_mass) < 1e-6 && cost < best_cost))
-                    {
-                        best_mass = mass;
-                        best_cost = cost;
+    // -----------------------------
+    // DISPLAY ALL VALID COMBINATIONS
+    // -----------------------------
+    cout << "\n========================================\n";
+    cout << "Number of valid combinations: " << valid_combinations.size() << endl;
+    cout << "========================================\n";
 
-                        best_choice = {
-                            {"motor_id", m["id"]},
-                            {"gearbox_id", g["id"]},
-                            {"T_out", T_out},
-                            {"omega_out", omega_out},
-                            {"cost", cost},
-                            {"mass", mass}
-                        };
-                    }
-                }
+    if (valid_combinations.empty())
+    {
+        cout << "\nNo valid combination found.\n";
+        return 0;
+    }
+
+    // Display all combinations
+    cout << "\nAll valid combinations:\n";
+    cout << "Motor | Gearbox | Torque(Nm) | Speed(rad/s) | Mass(kg) | Cost\n";
+    cout << "--------------------------------------------------------------\n";
+
+    for (const auto& combo : valid_combinations)
+    {
+        cout << setw(5) << combo["motor_id"] << " | "
+            << setw(7) << combo["gearbox_id"] << " | "
+            << setw(10) << fixed << setprecision(3) << combo["T_out"].get<double>() << " | "
+            << setw(12) << combo["omega_out"].get<double>() << " | "
+            << setw(7) << combo["mass"].get<double>() << " | "
+            << setw(6) << combo["cost"].get<double>() << endl;
+    }
+
+    // -----------------------------
+    // FIND BEST BASED ON USER CHOICE
+    // -----------------------------
+    json best_choice;
+
+    if (costORweight == 0)
+    {
+        // Minimize cost
+        double best_cost = 1e9;
+        double best_mass = 1e9;
+
+        for (const auto& combo : valid_combinations)
+        {
+            double cost = combo["cost"];
+            double mass = combo["mass"];
+
+            if (cost < best_cost - 1e-9 ||
+                (abs(cost - best_cost) < 1e-6 && mass < best_mass - 1e-9))
+            {
+                best_cost = cost;
+                best_mass = mass;
+                best_choice = combo;
+            }
+        }
+    }
+    else
+    {
+        // Minimize weight
+        double best_mass = 1e9;
+        double best_cost = 1e9;
+
+        for (const auto& combo : valid_combinations)
+        {
+            double mass = combo["mass"];
+            double cost = combo["cost"];
+
+            if (mass < best_mass - 1e-9 ||
+                (abs(mass - best_mass) < 1e-6 && cost < best_cost - 1e-9))
+            {
+                best_mass = mass;
+                best_cost = cost;
+                best_choice = combo;
             }
         }
     }
@@ -188,26 +236,19 @@ int main()
     // -----------------------------
     // OUTPUT RESULT
     // -----------------------------
-    if (!best_choice.empty())
-    {
-        cout << "\n====== BEST COMBINATION ======\n";
-        cout << "Motor ID: " << best_choice["motor_id"] << endl;
-        cout << "Gearbox ID: " << best_choice["gearbox_id"] << endl;
-        cout << "Output Torque: " << best_choice["T_out"] << " Nm\n";
-        cout << "Output Speed: " << best_choice["omega_out"] << " rad/s\n";
-        
-        if (costORweight == 0) {
-            cout << "Cost: " << best_choice["cost"] << " (minimized)\n";
-            cout << "Mass: " << best_choice["mass"] << " kg\n";
-        }
-        else {
-            cout << "Mass: " << best_choice["mass"] << " kg (minimized)\n";
-            cout << "Cost: " << best_choice["cost"] << endl;
-        }
+    cout << "\n====== BEST COMBINATION ======\n";
+    cout << "Motor ID: " << best_choice["motor_id"] << endl;
+    cout << "Gearbox ID: " << best_choice["gearbox_id"] << endl;
+    cout << "Output Torque: " << best_choice["T_out"] << " Nm\n";
+    cout << "Output Speed: " << best_choice["omega_out"] << " rad/s\n";
+
+    if (costORweight == 0) {
+        cout << "Cost: " << best_choice["cost"] << " (minimized)\n";
+        cout << "Mass: " << best_choice["mass"] << " kg\n";
     }
-    else
-    {
-        cout << "\nNo valid combination found.\n";
+    else {
+        cout << "Mass: " << best_choice["mass"] << " kg (minimized)\n";
+        cout << "Cost: " << best_choice["cost"] << endl;
     }
 
     return 0;
