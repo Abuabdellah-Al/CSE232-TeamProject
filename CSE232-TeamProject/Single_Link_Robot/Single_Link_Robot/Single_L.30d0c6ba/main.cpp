@@ -113,9 +113,9 @@ int main()
     cin >> omega_required;
 
     //max cost from user
-    double max_cost;
-    cout << "Enter maximum allowed cost: ";
-    cin >> max_cost;
+    double costORweight;
+    cout << "for minimum cost:0 for minimum weight:1\n ";
+    cin >> costORweight;
 
     // -----------------------------
     // REQUIRED TORQUE
